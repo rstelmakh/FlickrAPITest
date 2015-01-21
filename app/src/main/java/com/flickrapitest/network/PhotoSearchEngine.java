@@ -1,6 +1,7 @@
 package com.flickrapitest.network;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -19,6 +20,11 @@ import org.json.JSONObject;
 public class PhotoSearchEngine
         extends VolleySuccessListener<PhotoSearchResponse,JSONObject>
         implements Response.ErrorListener{
+
+    public interface OnPhotosReceivedListener{
+        public void OnPhotosReceived(Photos photos);
+        public void OnError(VolleyError error);
+    }
 
     private OnPhotosReceivedListener onPhotosReceivedListener;
     private RequestQueue queue;
@@ -44,9 +50,6 @@ public class PhotoSearchEngine
         }
     }
 
-    public interface OnPhotosReceivedListener{
-        public void OnPhotosReceived(Photos photos);
-    }
 
 
     public PhotoSearchEngine(Context context, OnPhotosReceivedListener onPhotosReceivedListener){

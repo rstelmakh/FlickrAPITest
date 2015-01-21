@@ -9,8 +9,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
 import com.flickrapitest.network.PhotoSearchEngine;
 import com.flickrapitest.network.entities.Photos;
 
@@ -84,9 +86,18 @@ public class MainActivity extends Activity
 
     @Override
     public void OnPhotosReceived(Photos photos) {
+        if(photos.getTotal() == 0){
+            Toast.makeText(this, "No results found for your request.", Toast.LENGTH_SHORT).show();
+            return;
+        }
         PhotosAdapter adapter = new PhotosAdapter(this, photos.getPhotos());
         ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(adapter);
+    }
+
+    @Override
+    public void OnError(VolleyError error) {
+        Toast.makeText(this, "Unable access Flickr. Please check your connection.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
