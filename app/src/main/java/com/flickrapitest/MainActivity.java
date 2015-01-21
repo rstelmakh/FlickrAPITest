@@ -1,6 +1,7 @@
 package com.flickrapitest;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -42,6 +43,8 @@ public class MainActivity extends Activity
 
             @Override
             public void afterTextChanged(Editable s) {
+                ListView listView = (ListView) findViewById(R.id.listView);
+                listView.setAdapter(null);
                 photoSearch.search(s.toString());
             }
         });
@@ -55,17 +58,28 @@ public class MainActivity extends Activity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_history) {
+            Intent historyIntent = new Intent(this, SearchHistoryActivity.class);
+            startActivityForResult(historyIntent, SearchHistoryActivity.RESULT_CODE);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if(requestCode == SearchHistoryActivity.RESULT_CODE
+                && resultCode == RESULT_OK
+                && data != null){
+            String searchExtra = data.getStringExtra(SearchHistoryActivity.HISTORY_ITEM_EXTRA);
+            ((EditText)findViewById(R.id.editSearch)).setText(searchExtra);
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.flickrapitest.FlickrApp;
 import com.flickrapitest.network.entities.PhotoSearchResponse;
 import com.flickrapitest.network.entities.Photos;
 import com.flickrapitest.utils.TagsUtils;
@@ -22,8 +23,11 @@ public class PhotoSearchEngine
     private OnPhotosReceivedListener onPhotosReceivedListener;
     private RequestQueue queue;
 
+    private String lastQuery;
+
     @Override
     public void onResult(PhotoSearchResponse response) {
+        saveLastRequest();
         if(onPhotosReceivedListener != null){
             onPhotosReceivedListener.OnPhotosReceived(response.getPhotos());
         }
@@ -31,7 +35,13 @@ public class PhotoSearchEngine
 
     @Override
     public void onErrorResponse(VolleyError error) {
+        saveLastRequest();
+    }
 
+    private void saveLastRequest(){
+        if(!FlickrApp.historyList.contains(lastQuery)){
+            FlickrApp.historyList.add(lastQuery);
+        }
     }
 
     public interface OnPhotosReceivedListener{
@@ -46,7 +56,7 @@ public class PhotoSearchEngine
 
     public void search(String tagsStr){
         stop();
-
+        lastQuery = tagsStr.trim();
         queue.add(new PhotosSearchJSONRequest(TagsUtils.convertToTags(tagsStr), this, this));
     }
 
