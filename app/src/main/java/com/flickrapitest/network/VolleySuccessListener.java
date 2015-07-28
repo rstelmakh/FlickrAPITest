@@ -18,7 +18,7 @@ public abstract class VolleySuccessListener<T, E>
     @Override
     public void onResponse(E response)
     {
-        Log.e("VolleySuccessListener", "response : " + response);
+        Log.d("VolleySuccessListener", "response : " + response);
         
          onResult((T) GsonUtils.getGson().fromJson(response.toString(),
                  (Class<T>)((ParameterizedType)getClass()

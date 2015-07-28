@@ -1,7 +1,7 @@
 package com.flickrapitest.network;
 
 import android.content.Context;
-import android.widget.Toast;
+import android.text.TextUtils;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -45,12 +45,10 @@ public class PhotoSearchEngine
     }
 
     private void saveLastRequest(){
-        if(!FlickrApp.historyList.contains(lastQuery)){
+        if(!TextUtils.isEmpty(lastQuery) && !FlickrApp.historyList.contains(lastQuery)){
             FlickrApp.historyList.add(lastQuery);
         }
     }
-
-
 
     public PhotoSearchEngine(Context context, OnPhotosReceivedListener onPhotosReceivedListener){
         this.queue = Volley.newRequestQueue(context);

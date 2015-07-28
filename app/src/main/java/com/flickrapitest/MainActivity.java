@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,7 +12,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.flickrapitest.network.PhotoSearchEngine;
 import com.flickrapitest.network.entities.Photos;
@@ -34,20 +34,18 @@ public class MainActivity extends Activity
         photoSearch = new PhotoSearchEngine(this, this);
         ((EditText)findViewById(R.id.editSearch)).addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
             @Override
             public void afterTextChanged(Editable s) {
-                ListView listView = (ListView) findViewById(R.id.listView);
-                listView.setAdapter(null);
-                photoSearch.search(s.toString());
+                if(!TextUtils.isEmpty(s)){
+                    ListView listView = (ListView) findViewById(R.id.listView);
+                    listView.setAdapter(null);
+                    photoSearch.search(s.toString());
+                }
             }
         });
     }
@@ -86,8 +84,8 @@ public class MainActivity extends Activity
 
     @Override
     public void OnPhotosReceived(Photos photos) {
-        if(photos.getTotal() == 0){
-            Toast.makeText(this, "No results found for your request.", Toast.LENGTH_SHORT).show();
+        if(photos == null || photos.getTotal() == 0){
+            Toast.makeText(this, R.string.no_results, Toast.LENGTH_SHORT).show();
             return;
         }
         PhotosAdapter adapter = new PhotosAdapter(this, photos.getPhotos());
@@ -97,7 +95,7 @@ public class MainActivity extends Activity
 
     @Override
     public void OnError(VolleyError error) {
-        Toast.makeText(this, "Unable access Flickr. Please check your connection.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.unable_access_flickr, Toast.LENGTH_SHORT).show();
     }
 
     @Override

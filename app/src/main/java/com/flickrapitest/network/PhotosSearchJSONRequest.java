@@ -18,7 +18,7 @@ public class PhotosSearchJSONRequest
 
     public PhotosSearchJSONRequest(String tags, Listener<JSONObject> listener,ErrorListener errorListener)
     {
-        super(Method.GET, String.format(URL, tags), null, listener, errorListener);
+        super(Method.GET, String.format(URL, tags), listener, errorListener);
         setRetryPolicy(new DefaultRetryPolicy(
                 MY_SOCKET_TIMEOUT_MS,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
